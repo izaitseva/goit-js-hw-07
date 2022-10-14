@@ -1,11 +1,44 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
-const galleryDiv = document.querySelector('gallery');
 
-galleryDiv.addEventListener('click', onClick);
+const galleryRef = document.querySelector('.gallery');
+const galleryItemMarkup = createGalleryItemMarkup(galleryItems);
+galleryRef.insertAdjacentHTML('beforeend', galleryItemMarkup);
 
-function onClick(event) {
-//     if(event.target.nodeName !== 'img')
-//     return;    
+function createGalleryItemMarkup(galleryItems) {
+    return galleryItems
+        .map(({ preview, original, description }) => {
+            return `
+          <div class="gallery__item">
+            <a class="gallery__link" href="${original}">
+              <img
+                class="gallery__image"
+                src="${preview}"
+                data-source="${original}"
+                alt="${description}"
+              />
+            </a>
+          </div>
+        `;
+        })
+        .join("");
 }
-console.log(event.nodeName);
+
+galleryRef.addEventListener('click', onGalleryRefClick);
+
+let modalWindow;
+
+function onGalleryRefClick(event) {
+    event.preventDefault();
+    const isGalleryRef = event.target.classList.contains('gallery__image');
+
+    if (!isGalleryRef) {
+        return
+    }
+    
+    modalWindow = basicLightbox.create(
+        `<img src="${event.target.dataset.source}" width="800" height="600">`
+    )
+    modalWindow.show();
+    console.log(event.target.dataset);
+}
