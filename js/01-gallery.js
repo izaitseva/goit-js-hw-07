@@ -28,17 +28,40 @@ galleryRef.addEventListener('click', onGalleryRefClick);
 
 let modalWindow;
 
+onOpenModalRef.addEventListener('click', onOpenModal);
+onCloseModalRef.addEventListener('click', onCloseModal);
+onBackdropClickRef.addEventListener('click', onBackdropClick);
+
+function onOpenModal() {
+    modalWindow.addEventListener('keydown', onEscKeyPress);
+}
+
+function onCloseModal() {
+  modalWindow.removeEventListener('keydown', onEscKeyPress);
+}
+
+function onBackdropClick(event) {
+  if(event.currentTarget === event.target) {
+    console.log(event);
+  }
+}
+
 function onGalleryRefClick(event) {
     event.preventDefault();
+
     const isGalleryRef = event.target.classList.contains('gallery__image');
 
     if (!isGalleryRef) {
         return
     }
-    
+
     modalWindow = basicLightbox.create(
         `<img src="${event.target.dataset.source}" width="800" height="600">`
     )
     modalWindow.show();
     console.log(event.target.dataset);
+}
+
+function onEscKeyPress(event) {
+  console.log(event);
 }
