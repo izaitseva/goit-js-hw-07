@@ -6,9 +6,9 @@ const galleryItemMarkup = createGalleryItemMarkup(galleryItems);
 galleryRef.insertAdjacentHTML('beforeend', galleryItemMarkup);
 
 function createGalleryItemMarkup(galleryItems) {
-    return galleryItems
-        .map(({ preview, original, description }) => {
-            return `
+  return galleryItems
+    .map(({ preview, original, description }) => {
+      return `
           <div class="gallery__item">
             <a class="gallery__link" href="${original}">
               <img
@@ -20,48 +20,40 @@ function createGalleryItemMarkup(galleryItems) {
             </a>
           </div>
         `;
-        })
-        .join("");
+    })
+    .join("");
 }
 
 galleryRef.addEventListener('click', onGalleryRefClick);
 
 let modalWindow;
 
-onOpenModalRef.addEventListener('click', onOpenModal);
-onCloseModalRef.addEventListener('click', onCloseModal);
-onBackdropClickRef.addEventListener('click', onBackdropClick);
-
-function onOpenModal() {
-    modalWindow.addEventListener('keydown', onEscKeyPress);
-}
-
-function onCloseModal() {
-  modalWindow.removeEventListener('keydown', onEscKeyPress);
-}
-
-function onBackdropClick(event) {
-  if(event.currentTarget === event.target) {
-    console.log(event);
+function onKeydownEscape(event) {
+  if (event.key === 'Escape') {
+    modalWindow.close();
   }
 }
 
 function onGalleryRefClick(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const isGalleryRef = event.target.classList.contains('gallery__image');
+  const isGalleryRef = event.target.classList.contains('gallery__image');
 
-    if (!isGalleryRef) {
-        return
+  if (!isGalleryRef) {
+    return
+  }
+
+  modalWindow = basicLightbox.create(
+    `<img src="${event.target.dataset.source}" width="800" height="600">`,
+    {
+      onClose: () => {
+        document.removeEventListener("keydown", onKeydownEscape);
+      }
     }
+  )
+  modalWindow.show();
 
-    modalWindow = basicLightbox.create(
-        `<img src="${event.target.dataset.source}" width="800" height="600">`
-    )
-    modalWindow.show();
-    console.log(event.target.dataset);
-}
+  document.addEventListener("keydown", onKeydownEscape);
 
-function onEscKeyPress(event) {
-  console.log(event);
+  console.log(event.target.dataset);
 }
