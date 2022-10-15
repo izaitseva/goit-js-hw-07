@@ -9,7 +9,7 @@ function createGalleryItemMarkup(galleryItems) {
     return galleryItems
         .map(({ preview, original, description }) => {
             return `
-          
+          <li>
             <a class="gallery__item" href="${original}">
               <img
                 class="gallery__image"
@@ -18,10 +18,14 @@ function createGalleryItemMarkup(galleryItems) {
                 alt="${description}"
               />
             </a>
+            </li>
         `;
         })
         .join("");
 }
 
-
-console.log(galleryItems);
+let lightbox = new SimpleLightbox('.gallery a', {
+    captions: true,
+    captionsData: "alt",
+    captionDelay: 250
+});
